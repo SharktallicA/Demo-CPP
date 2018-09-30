@@ -1,80 +1,186 @@
 #pragma once
-
 /*
-	Useful static methods for C++ console applications
+	C++ general utility functions
 	Khalid Ali 2018
 	http://khalidali.co.uk/
 */
 
 #include <iostream>
+#include <sstream>
 #include <random>
 #include <windows.h>
 #include <conio.h>
 
 using namespace std;
 
+//Enumeration of possible foreground and background colours that the C++ console can be set to
 enum Colour
 {
-	black, blue, green, aqua, red, purple, yellow, default, gray, light_blue,
-	light_green, light_aqua, light_red, light_purple, light_yellow, white
-}; //enumeration of various colours for console foreground and background
+	BLACK, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, DEFAULT, GREY, LIGHT_BLUE,
+	LIGHT_GREEN, LIGHT_AQUA, LIGHT_RED, LIGHT_PURPLE, LIGHT_YELLOW, WHITE
+};
 
+//Class of static methods that provide utility functions for C++ console applications
 class Utility
 {
-	//purpose: abstract class the encapulsaties static methods for various useful functions
-
 private:
-	Utility() {}; //constructor private to prevent any attempts at initialisation
-public:
-	int Utility::generateNumber(int min, int max)
-	{
-		//purpose:Mersenne Twister 19937 64-Bit based P-RNG with provided minimum and maximum values for range
-		//parameters: (min) minimum bound for range, (max) maximum bound for range
+	Utility() {}; //prevents class from being constructed
 
-		int result = 0;
+public:
+	//Requests yes (true)/no (false) boolean input from the user
+	static bool Utility::getYesNo(void)
+	{
+		string strInput = "";
+		bool boolIsYes = true;
+
+		cin >> strInput;
+		while (strInput != "Y" && strInput != "Yes" && strInput != "YES" && strInput != "yes" && strInput != "N" && strInput != "No" && strInput != "NO" && strInput != "no" && strInput != "y" && strInput != "n")
+		{
+			cout << "ERROR: you can only enter 'Yes', 'No' or a similar variation.\nTry again: ";
+			cin >> strInput;
+		}
+
+		if (strInput == "Y" || strInput == "Yes" || strInput == "YES" || strInput == "yes" || strInput == "y")
+			boolIsYes = true;
+		else if (strInput == "N" || strInput == "No" || strInput == "NO" || strInput == "no" || strInput == "n")
+			boolIsYes = false;
+		return boolIsYes;
+	}
+	//Requests yes (true)/no (false) boolean input from the user with a given input notice message
+	static bool Utility::getYesNo(string strMessage)
+	{
+		string strInput = "";
+		bool boolIsYes = true;
+
+		cout << strMessage;
+		cin >> strInput;
+		cin.ignore();
+		while (strInput != "Y" && strInput != "Yes" && strInput != "YES" && strInput != "yes" && strInput != "N" && strInput != "No" && strInput != "NO" && strInput != "no" && strInput != "y" && strInput != "n")
+		{
+			cout << "ERROR: you can only enter 'Yes', 'No' or a similar variation.\nTry again: ";
+			cin >> strInput;
+		}
+
+		if (strInput == "Y" || strInput == "Yes" || strInput == "YES" || strInput == "yes" || strInput == "y")
+			boolIsYes = true;
+		else if (strInput == "N" || strInput == "No" || strInput == "NO" || strInput == "no" || strInput == "n")
+			boolIsYes = false;
+		return boolIsYes;
+	}
+
+	//Safely requests any string input from the user
+	static string Utility::getString(void)
+	{
+		string strInput = "";
+		getline(cin, strInput);
+		return strInput;
+	}
+	//Safely requests any string input from the user with a given input notice message
+	static string Utility::getString(string strMessage)
+	{
+		cout << strMessage;
+		string strInput = "";
+		getline(cin, strInput);
+		return strInput;
+	}
+
+	//Safely requests integer input from the user
+	static int Utility::getInteger(void)
+	{
+		string strInput = "";
+		int intInputAsInt = -1024;
+
+		cin >> strInput;
+		cin.ignore();
+		stringstream strStream(strInput);
+		strStream >> intInputAsInt;
+		return intInputAsInt;
+	}
+	//Safely requests integer input from the user with a given input notice message
+	static int Utility::getInteger(string strMessage, int intMin, int intMax)
+	{
+		string strInput = "";
+		int intInputAsInt = -1024;
+
+		cout << strMessage;
+		cin >> strInput;
+		cin.ignore();
+		stringstream strStream(strInput);
+		strStream >> intInputAsInt;
+		while (intInputAsInt < intMin || intInputAsInt > intMax)
+		{
+			cout << "ERROR: you can only enter a whole number between " << intMin << " and " << intMax << ".\nTry again: ";
+			cin >> strInput;
+			cin.ignore();
+			stringstream strStream(strInput);
+			strStream >> intInputAsInt;
+		}
+		return intInputAsInt;
+	}
+
+	//Generates a random number using 32-Bit Mersenne Twister 19937
+	static int Utility::generateNumber32(int intMin, int intMax)
+	{
+		int intResult;
+		random_device randGenerator;
+		mt19937 mersenne(randGenerator());
+		uniform_int_distribution<int> distInt(intMin, intMax);
+		intResult = distInt(mersenne);
+		return intResult;
+	}
+	//Generates a random number using 64-Bit Mersenne Twister 19937
+	static int Utility::generateNumber64(int intMin, int intMax)
+	{
+		int intResult;
 		random_device randGenerator;
 		mt19937_64 mersenne(randGenerator());
-		uniform_int_distribution<int> distrib(min, max);
-		result = distrib(mersenne);
-		return result;
+		uniform_int_distribution<int> distInt(intMin, intMax);
+		intResult = distInt(mersenne);
+		return intResult;
 	}
-	void Utility::clearScreen(void)
+
+	//Clears the screen
+	static void Utility::clearScreen(void)
 	{
-		//purpose: clears the screen
 		system("cls");
 	}
-	void Utility::setWindowTitle(string title)
+
+	//Sets the C++ console window's title
+	static void Utility::setWindowTitle(string strTitle)
 	{
-		//purpose: sets the window title
-		//parametres: (title) specified title for window
-		SetConsoleTitle(title.c_str());
+		SetConsoleTitle(strTitle.c_str());
 	}
-	void Utility::setWindowSize(unsigned int width, unsigned int height)
+
+	//Sets the C++ console window's size
+	static void Utility::setWindowSize(unsigned int uintWidth, unsigned int uintHeight)
 	{
 		//purpose: sets the window size
-		//parametres: (width) specified window width, (height) specified window height
+		//parametres: (uintWidth) specified window width, (uintHeight) specified window height
 
 		HWND console = GetConsoleWindow();
 		RECT rectWindow;
+
 		GetWindowRect(console, &rectWindow);
-		MoveWindow(console, rectWindow.left, rectWindow.top, width, height, TRUE);
+		MoveWindow(console, rectWindow.left, rectWindow.top, uintWidth, uintHeight, TRUE);
 	}
-	void Utility::setColour(Colour fore = WHITE, Colour back = BLACK)
+
+	//Sets the C++ console window's colours
+	static void Utility::setColour(Colour clrFore = WHITE, Colour clrBack = BLACK)
 	{
 		//purpose: sets the console colour
-		//parametres: (fore) enumeration for foreground colour (defaulted as white), (back) enumeration for background colour (defaulted as black)
+		//parametres: (clrFore) enumeration for foreground colour, (clrBack) enumeration for background colour (defaulted as black)
 
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		int colour = back * 16 + fore;
-		SetConsoleTextAttribute(handle, colour);
+		int intColour = clrBack * 16 + clrFore;
+
+		SetConsoleTextAttribute(handle, intColour);
 	}
-	void Utility::moveCursor(SHORT x, SHORT y)
-	{
-		//purpose: moves cursor 
-		//parametres: (x) specified cursor X, (y) specified cursor Y
 
+	//Moves the C++ console window's cursor
+	static void Utility::moveCursor(SHORT shrtX, SHORT shrtY)
+	{
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		COORD point = { x, y };
+		COORD point = { shrtX, shrtY };
 		SetConsoleCursorPosition(handle, point);
 	}
 };
