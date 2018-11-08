@@ -30,131 +30,131 @@ public:
 	//Requests yes (true)/no (false) boolean input from the user
 	static bool getYesNo(void)
 	{
-		string strInput = "";
-		bool boolIsYes = true;
+		string input = "";
+		bool isYes = true;
 
-		cin >> strInput;
-		while (strInput != "Y" && strInput != "Yes" && strInput != "YES" && strInput != "yes" && strInput != "N" && strInput != "No" && strInput != "NO" && strInput != "no" && strInput != "y" && strInput != "n")
+		cin >> input;
+		while (input != "Y" && input != "Yes" && input != "YES" && input != "yes" && input != "N" && input != "No" && input != "NO" && input != "no" && input != "y" && input != "n")
 		{
 			cout << "ERROR: you can only enter 'Yes', 'No' or a similar variation.\nTry again: ";
-			cin >> strInput;
+			cin >> input;
 		}
 
-		if (strInput == "Y" || strInput == "Yes" || strInput == "YES" || strInput == "yes" || strInput == "y")
-			boolIsYes = true;
-		else if (strInput == "N" || strInput == "No" || strInput == "NO" || strInput == "no" || strInput == "n")
-			boolIsYes = false;
-		return boolIsYes;
+		if (input == "Y" || input == "Yes" || input == "YES" || input == "yes" || input == "y")
+			isYes = true;
+		else if (input == "N" || input == "No" || input == "NO" || input == "no" || input == "n")
+			isYes = false;
+		return isYes;
 	}
 	//Requests yes (true)/no (false) boolean input from the user with a given input notice message
-	static bool getYesNo(string strMessage)
+	static bool getYesNo(string message)
 	{
-		string strInput = "";
-		bool boolIsYes = true;
+		string input = "";
+		bool isYes = true;
 
-		cout << strMessage;
-		cin >> strInput;
+		cout << message;
+		cin >> input;
 		cin.ignore();
-		while (strInput != "Y" && strInput != "Yes" && strInput != "YES" && strInput != "yes" && strInput != "N" && strInput != "No" && strInput != "NO" && strInput != "no" && strInput != "y" && strInput != "n")
+		while (input != "Y" && input != "Yes" && input != "YES" && input != "yes" && input != "N" && input != "No" && input != "NO" && input != "no" && input != "y" && input != "n")
 		{
 			cout << "ERROR: you can only enter 'Yes', 'No' or a similar variation.\nTry again: ";
-			cin >> strInput;
+			cin >> input;
 		}
 
-		if (strInput == "Y" || strInput == "Yes" || strInput == "YES" || strInput == "yes" || strInput == "y")
-			boolIsYes = true;
-		else if (strInput == "N" || strInput == "No" || strInput == "NO" || strInput == "no" || strInput == "n")
-			boolIsYes = false;
-		return boolIsYes;
+		if (input == "Y" || input == "Yes" || input == "YES" || input == "yes" || input == "y")
+			isYes = true;
+		else if (input == "N" || input == "No" || input == "NO" || input == "no" || input == "n")
+			isYes = false;
+		return isYes;
 	}
 
 	//Safely requests any string input from the user
 	static string getString(void)
 	{
-		string strInput = "";
-		getline(cin, strInput);
-		return strInput;
+		string input = "";
+		getline(cin, input);
+		return input;
 	}
 	//Safely requests any string input from the user with a given input notice message
-	static string getString(string strMessage)
+	static string getString(string message)
 	{
-		cout << strMessage;
-		string strInput = "";
-		getline(cin, strInput);
-		return strInput;
+		cout << message;
+		string input = "";
+		getline(cin, input);
+		return input;
 	}
 
 	//Safely requests integer input from the user
 	static int getInteger(void)
 	{
-		string strInput = "";
-		int intInputAsInt = -1024;
+		string input = "";
+		int parseResult = -1024;
 
-		cin >> strInput;
+		cin >> input;
 		cin.ignore();
-		stringstream strStream(strInput);
-		strStream >> intInputAsInt;
-		return intInputAsInt;
+		stringstream strStream(input);
+		strStream >> parseResult;
+		return parseResult;
 	}
 	//Safely requests integer input from the user with a given input notice message
-	static int getInteger(string strMessage, int intMin, int intMax)
+	static int getInteger(string message, int min, int max)
 	{
-		string strInput = "";
-		int intInputAsInt = -1024;
+		string input = "";
+		int parseResult = -1024;
 
-		cout << strMessage;
-		cin >> strInput;
+		cout << message;
+		cin >> input;
 		cin.ignore();
-		stringstream strStream(strInput);
-		strStream >> intInputAsInt;
-		while (intInputAsInt < intMin || intInputAsInt > intMax)
+		stringstream strStream(input);
+		strStream >> parseResult;
+		while (parseResult < min || parseResult > max)
 		{
-			cout << "ERROR: you can only enter a whole number between " << intMin << " and " << intMax << ".\nTry again: ";
-			cin >> strInput;
+			cout << "ERROR: you can only enter a whole number between " << min << " and " << max << ".\nTry again: ";
+			cin >> input;
 			cin.ignore();
-			stringstream strStream(strInput);
-			strStream >> intInputAsInt;
+			stringstream strStream(input);
+			strStream >> parseResult;
 		}
-		return intInputAsInt;
+		return parseResult;
 	}
 
 	//Generates a random integer using 32-Bit Mersenne Twister 19937
-	static int generateNumber32(int intMin, int intMax)
+	static int generateNumber32(int min, int max)
 	{
 		int intResult;
 		random_device randGenerator;
 		mt19937 mersenne(randGenerator());
-		uniform_int_distribution<int> distInt(intMin, intMax);
+		uniform_int_distribution<int> distInt(min, max);
 		intResult = distInt(mersenne);
 		return intResult;
 	}
 	//Generates a random integer using 64-Bit Mersenne Twister 19937
-	static int generateNumber64(int intMin, int intMax)
+	static int generateNumber64(int min, int max)
 	{
 		int intResult;
 		random_device randGenerator;
 		mt19937_64 mersenne(randGenerator());
-		uniform_int_distribution<int> distInt(intMin, intMax);
+		uniform_int_distribution<int> distInt(min, max);
 		intResult = distInt(mersenne);
 		return intResult;
 	}
 	//Generates a random double using 32-Bit Mersenne Twister 19937
-	static double generateNumber32(double dblMin, double dblMax)
+	static double generateNumber32(double min, double max)
 	{
 		double dblResult;
 		random_device randGenerator;
 		mt19937 mersenne(randGenerator());
-		uniform_real_distribution<double> distInt(dblMin, dblMax);
+		uniform_real_distribution<double> distInt(min, max);
 		dblResult = distInt(mersenne);
 		return dblResult;
 	}
 	//Generates a random double using 64-Bit Mersenne Twister 19937
-	static double generateNumber64(double dblMin, double dblMax)
+	static double generateNumber64(double min, double max)
 	{
 		double dblResult;
 		random_device randGenerator;
 		mt19937_64 mersenne(randGenerator());
-		uniform_real_distribution<double> distInt(dblMin, dblMax);
+		uniform_real_distribution<double> distInt(min, max);
 		dblResult = distInt(mersenne);
 		return dblResult;
 	}
@@ -166,50 +166,44 @@ public:
 	}
 
 	//Waits for user input - good replacement for system("pause")
-	static char pause(string strMessage = "Press any key to continue...")
+	static char pause(string message = "Press any key to continue...")
 	{
-		cout << strMessage;
+		cout << message;
 		char in = _getch();
 		cout << endl;
 		return in;
 	}
 
 	//Sets the C++ console window's title
-	static void setWindowTitle(string strTitle)
+	static void setWindowTitle(string title)
 	{
-		SetConsoleTitle(strTitle.c_str());
+		SetConsoleTitle(title.c_str());
 	}
 
 	//Sets the C++ console window's size
-	static void setWindowSize(unsigned int uintWidth, unsigned int uintHeight)
+	static void setWindowSize(unsigned int width, unsigned int height)
 	{
-		//purpose: sets the window size
-		//parametres: (uintWidth) specified window width, (uintHeight) specified window height
-
 		HWND console = GetConsoleWindow();
 		RECT rectWindow;
 
 		GetWindowRect(console, &rectWindow);
-		MoveWindow(console, rectWindow.left, rectWindow.top, uintWidth, uintHeight, TRUE);
+		MoveWindow(console, rectWindow.left, rectWindow.top, width, height, TRUE);
 	}
 
 	//Sets the C++ console window's colours | Possible: BLACK, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, DEFAULT, GREY, LIGHT_BLUE, LIGHT_GREEN, LIGHT_AQUA, LIGHT_RED, LIGHT_PURPLE, LIGHT_YELLOW, WHITE
-	static void setColour(Colour clrFore = WHITE, Colour clrBack = BLACK)
+	static void setColour(Colour fore = WHITE, Colour back = BLACK)
 	{
-		//purpose: sets the console colour
-		//parametres: (clrFore) enumeration for foreground colour, (clrBack) enumeration for background colour (defaulted as black)
-
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		int intColour = clrBack * 16 + clrFore;
+		int intColour = back * 16 + fore;
 
 		SetConsoleTextAttribute(handle, intColour);
 	}
 
 	//Moves the C++ console window's cursor
-	static void moveCursor(SHORT shrtX, SHORT shrtY)
+	static void moveCursor(SHORT x, SHORT y)
 	{
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		COORD point = { shrtX, shrtY };
+		COORD point = { x, y };
 		SetConsoleCursorPosition(handle, point);
 	}
 };
