@@ -1,6 +1,6 @@
 #pragma once
 /*
-	C++ general utility functions
+	C++ general utility functions and helper classes
 	Khalid Ali 2018
 	http://khalidali.co.uk/
 */
@@ -13,11 +13,52 @@
 
 using namespace std;
 
+//2-dimensional vector 
+struct vec2
+{
+public:
+	int x, y;
+
+	vec2(void) {}
+	vec2(int nX, int nY) { x = nX; y = nY; }
+
+	bool operator==(vec2& o) const
+	{
+		if ((x == o.x) && (y == o.y)) return true;
+		else return false;
+	}
+	bool operator!=(vec2& o) const
+	{
+		if ((x != o.x) || (y != o.y)) return true;
+		else return false;
+	}
+};
+
 //Enumeration of possible foreground and background colours that the C++ console can be set to
 enum Colour
 {
 	BLACK, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, DEFAULT, GREY, LIGHT_BLUE,
 	LIGHT_GREEN, LIGHT_AQUA, LIGHT_RED, LIGHT_PURPLE, LIGHT_YELLOW, WHITE
+};
+
+//Encapulation of two Colour enumerations for data transportation
+struct ColourVec
+{
+	Colour fore, back;
+
+	ColourVec(void) {}
+	ColourVec(Colour nFore, Colour nBack) { fore = nFore; back = nBack; }
+
+	bool operator==(ColourVec& o) const
+	{
+		if ((fore == o.fore) && (back == o.back)) return true;
+		else return false;
+	}
+	bool operator!=(ColourVec& o) const
+	{
+		if ((fore != o.fore) || (back != o.back)) return true;
+		else return false;
+	}
 };
 
 //Class of static methods that provide utility functions for C++ console applications
@@ -190,15 +231,39 @@ public:
 		MoveWindow(console, rectWindow.left, rectWindow.top, width, height, TRUE);
 	}
 
+	//Resets the C++ console window's colours to default
+	static void resetColour(void)
+	{
+		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		int colour = BLACK * 16 + DEFAULT;
+
+		SetConsoleTextAttribute(handle, colour);
+	}
+
 	//Sets the C++ console window's colours | Possible: BLACK, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, DEFAULT, GREY, LIGHT_BLUE, LIGHT_GREEN, LIGHT_AQUA, LIGHT_RED, LIGHT_PURPLE, LIGHT_YELLOW, WHITE
 	static void setColour(Colour fore = WHITE, Colour back = BLACK)
 	{
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-		int intColour = back * 16 + fore;
+		int colour = back * 16 + fore;
 
-		SetConsoleTextAttribute(handle, intColour);
+		SetConsoleTextAttribute(handle, colour);
+	}
+	//Sets the C++ console window's colours | Possible: BLACK, BLUE, GREEN, AQUA, RED, PURPLE, YELLOW, DEFAULT, GREY, LIGHT_BLUE, LIGHT_GREEN, LIGHT_AQUA, LIGHT_RED, LIGHT_PURPLE, LIGHT_YELLOW, WHITE
+	static void setColour(ColourVec colours = ColourVec(WHITE, BLACK))
+	{
+		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		int colour = colours.back * 16 + colours.fore;
+
+		SetConsoleTextAttribute(handle, colour);
 	}
 
+	//Moves the C++ console window's cursor
+	static void moveCursor(vec2 nPos)
+	{
+		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		COORD point = { nPos.x, nPos.y };
+		SetConsoleCursorPosition(handle, point);
+	}
 	//Moves the C++ console window's cursor
 	static void moveCursor(SHORT x, SHORT y)
 	{
